@@ -4,7 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Assistant de Collecte Bouffe-Action</title>
-    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="/fontawesome/css/fontawesome.css">
+    <link rel="stylesheet" href="/fontawesome/css/brands.css">
+    <link rel="stylesheet" href="/fontawesome/css/solid.css">
+
     <script src="/bootstrap/js/bootstrap.bundle.min.js" defer></script>
   </head>
   <body>
@@ -64,52 +69,20 @@
             </tbody>
           </table>
         </div>
-
-        <div class="col-md-1"></div>
-
-        <div class="col-md-4 border">
-          <!-- control panel -->
-          <div class="row bg-light border">
-            <h3>Panneau de controle</h3>
-          </div>
-
-          <!-- last provider recorded-->
-          <div class="row my-1">
-            <div class="mb-3">
-              <label class="form-label">Dernier Fournisseur Enregistr&eacute;</label>
-              <div class="input-group">
-                <span class="input-group-text bg-primary text-white" id="current-provider">Provigo</span>
-                <input type="text" class="form-control" id="new-provider" aria-describedby="current-provider">
-                <button class="btn btn-outline-secondary text-white bg-success" type="button">Valider</button>
-              </div>
-              <div class="form-text">Saisir le code barre du nouveau fournisseur (ou utiliser la douchette)</div>
-            </div>
-          </div>
-
-          <!-- last product recorded -->
-          <div class="row my-1">
-            <div class="mb-3">
-              <label class="form-label">Dernier Produit Enregistr&eacute;</label>
-              <div class="input-group">
-                <span class="input-group-text bg-primary text-white" id="current-product">Petits Pois</span>
-                <input type="text" class="form-control" id="new-product" aria-describedby="current-product">
-                <button class="btn btn-outline-secondary text-white bg-success" type="button">Valider</button>
-              </div>
-              <div class="form-text">Saisir le code barre du nouveau produit (ou utiliser la douchette)</div>
-            </div>
-          </div>
-
-          <!-- filler -->
-          <div class="row"><div class="mb-3">&nbsp;</div></div>
-          <div class="row"><div class="mb-3">&nbsp;</div></div>
-
-          <div class="row">
-            <div class="mb-3"><h2>Boite de saisie</h2></div>
-          </div>
-        </div>
-
-
       </div>
+
+      <div class="row fixed-bottom my-2 p-2">
+        <div class="col-md-6 mb-3">
+          <label for="basic-url" class="form-label">Ligne de saisie</label>
+          <div class="input-group">
+            <span class="input-group-text" id="basic-addon3"><i class="fa-solid fa-barcode"></i></span>
+            <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+            <button class="btn btn-success" type="button">ENTER</button>
+          </div>
+          <div class="form-text">Utilisez le lecteur de code barre, ou entrez le texte correspondant &agrave; votre article.</div>
+        </div>
+      </div>
+
     </div>
 
   </body>

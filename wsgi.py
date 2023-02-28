@@ -12,8 +12,23 @@
 # @brief	Main Entry Point
 
 #----- imports
-from app.http import create_app
+from flask import render_template
+
+import connexion
+
+options = { "static_folder":"./static"}
+
+app = connexion.FlaskApp(__name__, specification_dir="./app/api", server_args=options)
+
+app.add_api("swagger.yml")
 
 
-#----- begin
-app = create_app()
+@app.route("/")
+def index():
+    return render_template("index.html", template_folder="static")
+
+
+
+if __name__ == "__main__":
+
+    app.run(host="0.0.0.0", port=5000, debug=True)

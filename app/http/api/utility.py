@@ -19,8 +19,7 @@ from . import api, create_response
 
 
 #----- functions
-@api.route("/v1/ping", methods=["GET"])
-def ping_v1():
+def ping():
     """Process the ping-pong request"""
     return create_response(
         {

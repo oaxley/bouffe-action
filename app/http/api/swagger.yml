@@ -1,0 +1,118 @@
+# swagger.yml
+
+openapi: 3.0.0
+info:
+    title: "Bouffe Action REST API"
+    description: "An API to handle Bouffe-Action's workflow"
+    version: "1.0.0"
+
+servers:
+    - url: "/api"
+
+components:
+    schemas:
+        Fournisseur:
+            type: "object"
+            required:
+                - fname
+                - fid
+            properties:
+                fid:
+                    type: "string"
+                fname:
+                    type: "string"
+                address:
+                    type: "string"
+
+    parameters:
+        fid:
+            name: "fid"
+            description: "Code Fournisseur"
+            in: path
+            required: True
+            schema:
+                type: "string"
+
+paths:
+    /v1/ping:
+        get:
+            operationId: "app.http.api.utility.ping"
+            tags:
+                - "Utility"
+            summary: "Returns a ping"
+            responses:
+                "200":
+                    description: "Successfully get a ping"
+
+    /v1/fournisseur:
+        get:
+            operationId: "app.http.api.fournisseur.get_providers"
+            tags:
+                - "Fournisseurs"
+            summary: "Retourne la liste des fournisseurs"
+            responses:
+                "200":
+                    description: "Retourne la liste des fournisseurs connus"
+
+        post:
+            operationId: "app.http.api.fournisseur.create_provider"
+            tags:
+                - "Fournisseurs"
+            summary: "Ajouter un nouveau fournisseur"
+            requestBody:
+                description: "Fournisseur a creer"
+                required: True
+                content:
+                    application/json:
+                        schema:
+                            x-body-name: "fournisseur"
+                            $ref: "#/components/schemas/Fournisseur"
+            responses:
+                "201":
+                    description: "Creation reussie"
+                "406":
+                    description: "Un fournisseur avec le meme code existe deja"
+
+    /v1/fournisseur/{fid}:
+        get:
+            operationId: "app.http.api.fournisseur.delete_one_provider"
+            tags:
+                - "Fournisseurs"
+            summary: "Retourne les details concernant un fournisseur"
+            parameters:
+                - $ref: "#/components/parameters/fid"
+            responses:
+                "201":
+                    description: "Retourne les details du fournisseur specifie"
+                "406":
+                    description: "Ce fournisseur n'existe pas"
+        delete:
+            operationId: "app.http.api.fournisseur.get_one_provider"
+            tags:
+                - "Fournisseurs"
+            summary: "Supprime un fournisseur"
+            parameters:
+                - $ref: "#/components/parameters/fid"
+            responses:
+                "201":
+                    description: " les details du fournisseur specifie"
+                "406":
+                    description: "Ce fournisseur n'existe pas"
+        put:
+            operationId: "app.http.api.fournisseur.update_one_provider"
+            tags:
+                - "Fournisseurs"
+            summary: "Mise a jour des details concernant un fournisseur"
+            requestBody:
+                description: "Fournisseur a creer"
+                required: True
+                content:
+                    application/json:
+                        schema:
+                            x-body-name: "fournisseur"
+                            $ref: "#/components/schemas/Fournisseur"
+            responses:
+                "201":
+                    description: "Le fournisseur specifie a ete mis a jour"
+                "406":
+                    description: "Ce fournisseur n'existe pas"

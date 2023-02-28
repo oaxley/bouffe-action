@@ -9,3 +9,4 @@ python-dotenv==1.0.0
 tomli==2.0.1
 typing_extensions==4.5.0
 Werkzeug==2.2.3
+connexion[swagger-ui]==2.14.1

@@ -20,13 +20,6 @@ app = connexion.FlaskApp(__name__, specification_dir="./app/api")
 app.app.register_blueprint(main, url_prefix="/")
 app.add_api("swagger.yml")
 
-
-@app.route("/")
-def index():
-    return render_template("index.html", template_folder="static")
-
-
-
 if __name__ == "__main__":
 
     app.run(host="0.0.0.0", port=5000, debug=True)

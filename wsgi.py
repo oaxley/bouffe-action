@@ -13,13 +13,11 @@
 
 #----- imports
 from flask import render_template
-
+from app.main.views import main
 import connexion
 
-options = { "static_folder":"./static"}
-
-app = connexion.FlaskApp(__name__, specification_dir="./app/api", server_args=options)
-
+app = connexion.FlaskApp(__name__, specification_dir="./app/api")
+app.app.register_blueprint(main, url_prefix="/")
 app.add_api("swagger.yml")
 
 

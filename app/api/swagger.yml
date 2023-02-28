@@ -36,7 +36,7 @@ components:
 paths:
     /v1/ping:
         get:
-            operationId: "app.http.api.utility.ping"
+            operationId: "app.api.utility.ping"
             tags:
                 - "Utility"
             summary: "Returns a ping"
@@ -46,7 +46,7 @@ paths:
 
     /v1/fournisseur:
         get:
-            operationId: "app.http.api.fournisseur.get_providers"
+            operationId: "app.api.fournisseur.get_providers"
             tags:
                 - "Fournisseurs"
             summary: "Retourne la liste des fournisseurs"
@@ -55,7 +55,7 @@ paths:
                     description: "Retourne la liste des fournisseurs connus"
 
         post:
-            operationId: "app.http.api.fournisseur.create_provider"
+            operationId: "app.api.fournisseur.create_provider"
             tags:
                 - "Fournisseurs"
             summary: "Ajouter un nouveau fournisseur"
@@ -75,7 +75,7 @@ paths:
 
     /v1/fournisseur/{fid}:
         get:
-            operationId: "app.http.api.fournisseur.delete_one_provider"
+            operationId: "app.api.fournisseur.delete_one_provider"
             tags:
                 - "Fournisseurs"
             summary: "Retourne les details concernant un fournisseur"
@@ -87,7 +87,7 @@ paths:
                 "406":
                     description: "Ce fournisseur n'existe pas"
         delete:
-            operationId: "app.http.api.fournisseur.get_one_provider"
+            operationId: "app.api.fournisseur.get_one_provider"
             tags:
                 - "Fournisseurs"
             summary: "Supprime un fournisseur"
@@ -99,7 +99,7 @@ paths:
                 "406":
                     description: "Ce fournisseur n'existe pas"
         put:
-            operationId: "app.http.api.fournisseur.update_one_provider"
+            operationId: "app.api.fournisseur.update_one_provider"
             tags:
                 - "Fournisseurs"
             summary: "Mise a jour des details concernant un fournisseur"

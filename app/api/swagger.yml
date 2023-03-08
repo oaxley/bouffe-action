@@ -103,7 +103,7 @@ paths:
             operationId: "app.api.entity.get_one_entity"
             tags:
                 - "entities"
-            summary: "Retourne les details concernant un entity"
+            summary: "Returns the details regarding an entity"
             parameters:
                 - $ref: "#/components/parameters/eid"
             responses:
@@ -141,3 +141,13 @@ paths:
                     description: "Entity updated sucessfully"
                 "406":
                     description: "Entity doesn't exists"
+
+    /v1/scale/:
+        get:
+            operationId: "app.api.scale.get_scale"
+            tags:
+                - "scale"
+            summary: "Returns the current value read by scale "
+            responses:
+                "201":
+                    description: "Current read value"

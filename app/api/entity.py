@@ -16,13 +16,20 @@ import app.config as config
 from . import api, create_response
 from flask import abort
 
+from enum import Enum
+
+class EntityType(Enum):
+    PROVIDER="provider"
+    PRODUCT="product"
+
+
 ENTITIES = [
-    { "id": "F00001", "name":"Provigo" , "etype": "provider" },
-    { "id": "F00002", "name":"IGA"  , "etype": "provider"},
-    { "id": "F00003", "name":"Metro"  , "etype": "provider"},
-    { "id": "P00001", "name":"Fruit" , "etype": "product" },
-    { "id": "P00002", "name":"Bread"  , "etype": "product"},
-    { "id": "P00003", "name":"Vegetables"  , "etype": "product"},
+    { "id": "F00001", "name":"Provigo" , "etype": EntityType.PROVIDER },
+    { "id": "F00002", "name":"IGA"  , "etype": EntityType.PROVIDER },
+    { "id": "F00003", "name":"Metro"  , "etype": EntityType.PROVIDER },
+    { "id": "P00001", "name":"Fruit" , "etype": EntityType.PRODUCT  },
+    { "id": "P00002", "name":"Bread"  , "etype": EntityType.PRODUCT },
+    { "id": "P00003", "name":"Vegetables"  , "etype": EntityType.PRODUCT },
 ]
 
 E = { f['id'] : f for f in ENTITIES}
@@ -44,14 +51,18 @@ def get_entities():
     return get_entities_by_type(etype=None)
 
 
+def get_one_entity_raw(eid):
+    return E[eid]
+
 def get_one_entity(eid):
     """Process the ping-pong request"""
     if eid in E:
+        entity = get_one_entity_raw(eid)
         return create_response(
-            E[eid],
+            entity,
             config.HTTP_OK)
     else:
-        abort(406, "The entity {} doesn't exists")
+        abort(config.HTTP_NOT_FOUND, "The entity {} doesn't exists")
 
 def delete_one_entity(eid):
     """Process the ping-pong request"""
@@ -62,7 +73,7 @@ def delete_one_entity(eid):
             f"The entity  {eid}/ {fname} / {faddr} has been deleted",
             config.HTTP_OK)
     else:
-        abort(406, "The entity  {} doesn't exists")
+        abort(config.HTTP_NOT_FOUND, "The entity  {} doesn't exists")
 
 def update_one_entity(entity):
     create_or_update_entity(entity=entity, update=True)
@@ -76,12 +87,12 @@ def create_or_update_entity(entity, update):
     etype = entity.get("etype", "")
     if not update and eid in E:
         abort(
-            406,
+            config.HTTP_NOT_FOUND,
             f"The entity {eid} : {ename} already exists"
         )
     elif update and eid not in E:
         abort(
-            406,
+            config.HTTP_NOT_FOUND,
             f"he entity  {eid} : {ename} doesn't exists"
         )
     else:
@@ -91,4 +102,4 @@ def create_or_update_entity(entity, update):
             "address": etype,
         }
 
-        return E[eid], 201
+        return E[eid], config.HTTP_OK

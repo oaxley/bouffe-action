@@ -16,17 +16,31 @@ import app.config as config
 from . import api, create_response
 from flask import abort
 import random
-import math
+import time
 stable = False
 value = random.randint(1,90)/10
 
-def get_scale():
+
+def get_raw_scale():
     global stable, value
     stable = random.randint(0,10) > 3
     if not stable:
         value *= random.uniform(0.7,1.3)
+    res = {'value':round(value,2), 'stable': stable}
+    return res
 
+def get_scale():
+    res = get_raw_scale()
     return create_response(
-        {'value':round(value,2), 'stable': stable},
+        res,
         config.HTTP_OK
     )
+
+
+def get_stable_scale_reading():
+    scale = get_raw_scale()
+    while not scale['stable']:
+        time.sleep(0.1)
+        scale = get_raw_scale()
+
+    return scale['value']

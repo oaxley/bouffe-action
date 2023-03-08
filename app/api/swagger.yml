@@ -29,6 +29,9 @@ components:
             enum:
                 - provider
                 - product
+        Barcode:
+            type: "string"
+
 
     parameters:
         eid:
@@ -45,6 +48,7 @@ components:
             required: True
             schema:
                 $ref: "#/components/schemas/EntityType"
+
 
 paths:
     /v1/ping:
@@ -72,9 +76,9 @@ paths:
                             x-body-name: "entity"
                             $ref: "#/components/schemas/Entity"
             responses:
-                "201":
+                "200":
                     description: "Sucessful creation"
-                "406":
+                "400":
                     description: "Another entity with this code already exists"
     /v1/entities:
         get:
@@ -107,9 +111,9 @@ paths:
             parameters:
                 - $ref: "#/components/parameters/eid"
             responses:
-                "201":
+                "200":
                     description: "Returns the detailed of specified entity"
-                "406":
+                "404":
                     description: "This entity doesnt' exists"
         delete:
             operationId: "app.api.entity.delete_one_entity"
@@ -119,9 +123,9 @@ paths:
             parameters:
                 - $ref: "#/components/parameters/eid"
             responses:
-                "201":
+                "200":
                     description: "Entity was deleted sucessfully"
-                "406":
+                "404":
                     description: "Entity doesn't exists"
         put:
             operationId: "app.api.entity.update_one_entity"
@@ -137,9 +141,9 @@ paths:
                             x-body-name: "entity"
                             $ref: "#/components/schemas/Entity"
             responses:
-                "201":
+                "200":
                     description: "Entity updated sucessfully"
-                "406":
+                "404":
                     description: "Entity doesn't exists"
 
     /v1/scale/:
@@ -149,5 +153,33 @@ paths:
                 - "scale"
             summary: "Returns the current value read by scale "
             responses:
-                "201":
+                "200":
+                    description: "Current read value"
+
+    /v1/input/:
+        post:
+            operationId: "app.api.input.barcode"
+            tags:
+                - "input"
+            summary: "Send a barcode"
+            requestBody:
+                description: "Sends a command"
+                required: True
+                content:
+                    application/json:
+                        schema:
+                            x-body-name: "barcode"
+                            $ref: "#/components/schemas/Barcode"
+            responses:
+                "200":
+                    description: "Command Successful"
+                "400":
+                    description: "Unknown Command"
+        get:
+            operationId: "app.api.input.get_input"
+            tags:
+                - "input"
+            summary: "Return list of know inputs "
+            responses:
+                "200":
                     description: "Current read value"

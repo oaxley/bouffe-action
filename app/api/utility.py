@@ -15,7 +15,7 @@
 from datetime import datetime
 
 import app.config as config
-from . import api, create_response
+from . import create_response
 
 
 #----- functions

@@ -12,7 +12,6 @@
 # @brief	Main Entry Point
 
 #----- imports
-from flask import render_template
 from app.main.views import main
 import connexion
 

@@ -11,27 +11,40 @@ servers:
 
 components:
     schemas:
-        Fournisseur:
+        Entity:
             type: "object"
             required:
-                - fname
-                - fid
+                - eid
+                - ename
+                - etype
             properties:
-                fid:
+                eid:
                     type: "string"
-                fname:
+                ename:
                     type: "string"
-                address:
+                etype:
                     type: "string"
+        EntityType:
+            type: "string"
+            enum:
+                - provider
+                - product
 
     parameters:
-        fid:
-            name: "fid"
-            description: "Code Fournisseur"
+        eid:
+            name: "eid"
+            description: "Entity Code"
             in: path
             required: True
             schema:
                 type: "string"
+        etype:
+            name: "etype"
+            description: "Entity Code"
+            in: path
+            required: True
+            schema:
+                $ref: "#/components/schemas/EntityType"
 
 paths:
     /v1/ping:
@@ -44,75 +57,87 @@ paths:
                 "200":
                     description: "Successfully get a ping"
 
-    /v1/fournisseur:
-        get:
-            operationId: "app.api.fournisseur.get_providers"
+    /v1/entity:
+        post:
+            operationId: "app.api.entity.create_entity"
             tags:
-                - "Fournisseurs"
-            summary: "Retourne la liste des fournisseurs"
+                - "entities"
+            summary: "Add new entity"
+            requestBody:
+                description: "Create new entity"
+                required: True
+                content:
+                    application/json:
+                        schema:
+                            x-body-name: "entity"
+                            $ref: "#/components/schemas/Entity"
+            responses:
+                "201":
+                    description: "Sucessful creation"
+                "406":
+                    description: "Another entity with this code already exists"
+    /v1/entities:
+        get:
+            operationId: "app.api.entity.get_entities"
+            tags:
+                - "entities"
+            summary: "Return list of know entities"
             responses:
                 "200":
-                    description: "Retourne la liste des fournisseurs connus"
+                    description: "Return list of know entities"
 
-        post:
-            operationId: "app.api.fournisseur.create_provider"
-            tags:
-                - "Fournisseurs"
-            summary: "Ajouter un nouveau fournisseur"
-            requestBody:
-                description: "Fournisseur a creer"
-                required: True
-                content:
-                    application/json:
-                        schema:
-                            x-body-name: "fournisseur"
-                            $ref: "#/components/schemas/Fournisseur"
-            responses:
-                "201":
-                    description: "Creation reussie"
-                "406":
-                    description: "Un fournisseur avec le meme code existe deja"
-
-    /v1/fournisseur/{fid}:
+    /v1/entities/{etype}:
         get:
-            operationId: "app.api.fournisseur.delete_one_provider"
+            operationId: "app.api.entity.get_entities_by_type"
             tags:
-                - "Fournisseurs"
-            summary: "Retourne les details concernant un fournisseur"
+                - "entities"
             parameters:
-                - $ref: "#/components/parameters/fid"
+                - $ref: "#/components/parameters/etype"
+            summary: "Return list of know entities"
+            responses:
+                "200":
+                    description: "Return list of know entities"
+
+    /v1/entity/{eid}:
+        get:
+            operationId: "app.api.entity.get_one_entity"
+            tags:
+                - "entities"
+            summary: "Retourne les details concernant un entity"
+            parameters:
+                - $ref: "#/components/parameters/eid"
             responses:
                 "201":
-                    description: "Retourne les details du fournisseur specifie"
+                    description: "Returns the detailed of specified entity"
                 "406":
-                    description: "Ce fournisseur n'existe pas"
+                    description: "This entity doesnt' exists"
         delete:
-            operationId: "app.api.fournisseur.get_one_provider"
+            operationId: "app.api.entity.delete_one_entity"
             tags:
-                - "Fournisseurs"
-            summary: "Supprime un fournisseur"
+                - "entities"
+            summary: "Delete an entity"
             parameters:
-                - $ref: "#/components/parameters/fid"
+                - $ref: "#/components/parameters/eid"
             responses:
                 "201":
-                    description: " les details du fournisseur specifie"
+                    description: "Entity was deleted sucessfully"
                 "406":
-                    description: "Ce fournisseur n'existe pas"
+                    description: "Entity doesn't exists"
         put:
-            operationId: "app.api.fournisseur.update_one_provider"
+            operationId: "app.api.entity.update_one_entity"
             tags:
-                - "Fournisseurs"
-            summary: "Mise a jour des details concernant un fournisseur"
+                - "entities"
+            summary: "Update an entity"
             requestBody:
-                description: "Fournisseur a creer"
+                description: "Entity to be updated"
                 required: True
                 content:
                     application/json:
                         schema:
-                            x-body-name: "fournisseur"
-                            $ref: "#/components/schemas/Fournisseur"
+                            x-body-name: "entity"
+                            $ref: "#/components/schemas/Entity"
             responses:
                 "201":
-                    description: "Le fournisseur specifie a ete mis a jour"
+                    description: "Entity updated sucessfully"
                 "406":
-                    description: "Ce fournisseur n'existe pas"
+                    description: "Entity doesn't exists"

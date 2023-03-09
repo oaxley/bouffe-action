@@ -12,6 +12,7 @@
 const SERVER_URL="http://localhost:5000/api/v1"
 
 const SCALE_TIMER_INTERVAL_MS = 2000;
+const INPUT_FOCUS_INTERVAL_MS = 1000;
 
 const BARCODE_PROVIDER_MARKER = 'F';
 const BARCODE_PRODUCT_MARKER = 'P';
@@ -45,12 +46,22 @@ function setup() {
     // setup the scale monitoring every seconds or so
     setInterval(readScaleValue, SCALE_TIMER_INTERVAL_MS);
 
+    setInterval(setInputFocus, INPUT_FOCUS_INTERVAL_MS)
+
     // bind the enter key to the barcode button
     window.addEventListener("keypress", (event) => {
         if (event.key == "Enter") {
             document.getElementById("barcode-btn").click();
         }
     });
+}
+
+// reset focus to input field
+function setInputFocus() {
+    var inputBar = document.getElementById("barcode-entry");
+    if(document.activeElement != inputBar) {
+        inputBar.focus()
+    }
 }
 
 

@@ -182,7 +182,16 @@ function addTableEntry(provider, product, weight) {
 
 
 function deleteRow(id) {
-    document.getElementById(id).remove();
+    /* remove the item from the backend first */
+    fetch(SERVER_URL + "/input/" + id, {
+        method: "DELETE"
+    })
+    .then((response) => {
+        return response.json()
+    })
+    .then((json) => {
+        document.getElementById(id).remove();
+    });
 }
 
 

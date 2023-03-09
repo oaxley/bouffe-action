@@ -47,6 +47,13 @@ components:
             required: True
             schema:
                 $ref: "#/components/schemas/EntityType"
+        rid:
+            name: "rid"
+            description: "Record ID"
+            in: path
+            required: True
+            schema:
+                type: "string"
 
 
 paths:
@@ -155,7 +162,7 @@ paths:
                 "200":
                     description: "Current read value"
 
-    /v1/input/:
+    /v1/input:
         post:
             operationId: "app.api.input.create_entry"
             tags:
@@ -182,3 +189,17 @@ paths:
             responses:
                 "200":
                     description: "List of records"
+
+    /v1/input/{rid}:
+        delete:
+            operationId: "app.api.input.delete_entry"
+            tags:
+                - "input"
+            summary: "Remove an entry from the records"
+            parameters:
+                - $ref: "#/components/parameters/rid"
+            responses:
+                "200":
+                    description: "Deletion successful"
+                "404":
+                    description: "Unknown record"

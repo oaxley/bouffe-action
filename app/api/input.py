@@ -55,6 +55,7 @@ def create_entry(data) -> Response:
 
 
 def get_entries() -> Response:
+    """Return the list of entries in the record"""
     results = []
     for k, v in RECORDS.items():
         results.append({
@@ -68,6 +69,14 @@ def get_entries() -> Response:
     return create_response({
         'records': results
     }, config.HTTP_OK)
+
+def delete_entry(rid) -> Response:
+    """Remove an entry from the Records"""
+    if int(rid) not in RECORDS:
+        abort(config.HTTP_NOT_FOUND, f"Unkown record ID {rid}")
+    else:
+        del(RECORDS[int(rid)])
+        return create_response("", config.HTTP_OK)
 
 
 #----- begin

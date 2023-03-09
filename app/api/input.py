@@ -10,75 +10,76 @@
 # @license	Apache License 2.0
 #
 # @brief	Interface for sending read input to backend
+
 #----- imports
+from __future__ import annotations
+from typing import Dict, List, Callable
+
+from flask import abort, Response
+from datetime import datetime
+from dataclasses import dataclass
 
 import app.config as config
-from . import api, create_response
-from flask import abort
+from . import create_response
 
 
-from .entity import E, EntityType, get_one_entity_raw
-from .scale import get_stable_scale_reading
+#----- classes
+@dataclass
+class Record:
+    provider: str
+    product: str
+    weight: str
+    timestamp: datetime
 
-import time
-from datetime import datetime
 
-COMMANDS = {
-    'DUMMY' : None
+#----- functions
+
+def process_input(data) -> Response:
+    if ('command' in data) and (data['command'] in COMMANDS):
+        return COMMANDS[data['command']](data)
+
+
+def create_entry(data) -> Response:
+    """Create a new entry in the RECORDS array"""
+
+    # retrieve the data from the front-end
+    try:
+        provider = data['provider']
+        product = data['product']
+        weight = data['weight']
+        now = datetime.now()
+
+        # record the entry
+        RECORDS.append(Record(provider, product, weight, now))
+
+        # create the response
+        return create_response(now, config.HTTP_OK)
+
+    except KeyError:
+        abort(config.HTTP_BAD_REQUEST, "Missing fields.")
+
+
+def get_entries() -> Response:
+    results = []
+    for r in RECORDS:
+        results.append({
+            'provider': r.provider,
+            'product': r.product,
+            'weight': r.weight,
+            'timestamp': r.timestamp
+        })
+
+    return create_response({
+        'records': results
+    }, config.HTTP_OK)
+
+
+#----- begin
+
+# define the list of available commands
+COMMANDS: Dict[str, Callable] = {
+    'CREATE': create_entry,
 }
 
-RECORDS = []
-
-current_provider = ""
-
-def process_command(command):
-    return create_response(f"Executed {command}",
-            config.HTTP_OK)
-
-def set_provider(provider):
-    global current_provider
-    provider_name = E[provider]['name']
-    current_provider = provider
-
-    return create_response(f"Setting current provider to {provider} / {provider_name} ",
-            config.HTTP_OK)
-
-def record_input(product):
-    if not current_provider:
-        return abort(config.HTTP_BAD_REQUEST, "Please scan a provider first")
-    weight = get_stable_scale_reading()
-    now = datetime.now()
-    RECORDS.append((product, current_provider, weight, now))
-    print(RECORDS)
-
-    return create_response(f"Add {weight} kg for {product}",
-            config.HTTP_OK)
-
-def barcode(barcode):
-    """Process the ping-pong request"""
-
-    if barcode in COMMANDS:
-        process_command(barcode)
-    elif barcode in E:
-        # we're either scanning a provider (i.e setting the current one)
-        # or scanning a product (i.e we need the scale reading)
-        entity = E[barcode]
-        if entity['etype'] == EntityType.PRODUCT:
-            return record_input(barcode)
-        elif entity['etype'] == EntityType.PROVIDER:
-            return set_provider(barcode)
-    else:
-        abort(config.HTTP_NOT_FOUND, "The entity {} doesn't exists")
-
-
-
-def get_input():
-    res = []
-
-    for r in RECORDS:
-        (product, provider, weight, ts) = r
-        p = get_one_entity_raw(product)
-        f = get_one_entity_raw(provider)
-        res.append({'provider': f['name'], 'product': p['name'], 'weigth': weight, 'ts':ts})
-    print(res)
-    return create_response( res, config.HTTP_OK)
+# the list of entities for this session
+RECORDS: List[Record] = []

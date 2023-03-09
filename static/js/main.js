@@ -143,31 +143,10 @@ function retrieveProduct(eid) {
 
 // add a new entry in the table
 function addTableEntry(provider, product, weight) {
-    var table = document.getElementById("table-content");
-    var id = "tbl" + last_items;
-    var x = table.rows.length;
-
-    var row = table.insertRow(x);
-    row.id = id;
-
-    // add the data to the table
-    row.insertCell(0).innerHTML = `<th scope="row">${last_items}</th>`;
-    row.insertCell(1).innerHTML = provider;
-    row.insertCell(2).innerHTML = product;
-    row.insertCell(3).innerHTML = weight;
-    row.insertCell(4).innerHTML = '<input type="button" class="btn btn-danger btn-sm" id="delrow" onclick="deleteRow(\''+id+'\')" value="Supprimer" />';
-
-    // increment the number of items
-    last_items = last_items + 1;
-
-    // create the string
-    command = `CREATE;${provider};${product};${weight}`
-
     // send the item to the backend
     fetch(SERVER_URL + "/input", {
         method: "POST",
         body: JSON.stringify({
-            command: "CREATE",
             provider: provider,
             product: product,
             weight: weight
@@ -180,7 +159,24 @@ function addTableEntry(provider, product, weight) {
         return response.json()
     })
     .then((json) => {
-        console.log(json);
+        // the json contains the ID of the item
+        var id = json['id']
+
+        // create a new entry in the table
+        var table = document.getElementById("table-content");
+        var x = table.rows.length;
+        var row = table.insertRow(x);
+
+        // add the data to the table
+        row.id = id;
+        row.insertCell(0).innerHTML = `<th scope="row">${last_items}</th>`;
+        row.insertCell(1).innerHTML = provider;
+        row.insertCell(2).innerHTML = product;
+        row.insertCell(3).innerHTML = weight;
+        row.insertCell(4).innerHTML = '<input type="button" class="btn btn-danger btn-sm" id="delrow" onclick="deleteRow(\''+id+'\')" value="Supprimer" />';
+
+        // increment the number of items
+        last_items = last_items + 1;
     });
 }
 

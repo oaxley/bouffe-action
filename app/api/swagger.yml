@@ -29,9 +29,8 @@ components:
             enum:
                 - provider
                 - product
-        Barcode:
-            type: "string"
-
+        Command:
+            type: "object"
 
     parameters:
         eid:
@@ -43,7 +42,7 @@ components:
                 type: "string"
         etype:
             name: "etype"
-            description: "Entity Code"
+            description: "Entity Type"
             in: path
             required: True
             schema:
@@ -61,25 +60,25 @@ paths:
                 "200":
                     description: "Successfully get a ping"
 
-    /v1/entity:
-        post:
-            operationId: "app.api.entity.create_entity"
-            tags:
-                - "entities"
-            summary: "Add new entity"
-            requestBody:
-                description: "Create new entity"
-                required: True
-                content:
-                    application/json:
-                        schema:
-                            x-body-name: "entity"
-                            $ref: "#/components/schemas/Entity"
-            responses:
-                "200":
-                    description: "Sucessful creation"
-                "400":
-                    description: "Another entity with this code already exists"
+    # /v1/entity:
+    #     post:
+    #         operationId: "app.api.entity.create_entity"
+    #         tags:
+    #             - "entities"
+    #         summary: "Add new entity"
+    #         requestBody:
+    #             description: "Create new entity"
+    #             required: True
+    #             content:
+    #                 application/json:
+    #                     schema:
+    #                         x-body-name: "entity"
+    #                         $ref: "#/components/schemas/Entity"
+    #         responses:
+    #             "200":
+    #                 description: "Sucessful creation"
+    #             "400":
+    #                 description: "Another entity with this code already exists"
     /v1/entities:
         get:
             operationId: "app.api.entity.get_entities"
@@ -97,10 +96,10 @@ paths:
                 - "entities"
             parameters:
                 - $ref: "#/components/parameters/etype"
-            summary: "Return list of know entities"
+            summary: "Return list of know entities per type"
             responses:
                 "200":
-                    description: "Return list of know entities"
+                    description: "Return list of know entities per type"
 
     /v1/entity/{eid}:
         get:
@@ -115,36 +114,36 @@ paths:
                     description: "Returns the detailed of specified entity"
                 "404":
                     description: "This entity doesnt' exists"
-        delete:
-            operationId: "app.api.entity.delete_one_entity"
-            tags:
-                - "entities"
-            summary: "Delete an entity"
-            parameters:
-                - $ref: "#/components/parameters/eid"
-            responses:
-                "200":
-                    description: "Entity was deleted sucessfully"
-                "404":
-                    description: "Entity doesn't exists"
-        put:
-            operationId: "app.api.entity.update_one_entity"
-            tags:
-                - "entities"
-            summary: "Update an entity"
-            requestBody:
-                description: "Entity to be updated"
-                required: True
-                content:
-                    application/json:
-                        schema:
-                            x-body-name: "entity"
-                            $ref: "#/components/schemas/Entity"
-            responses:
-                "200":
-                    description: "Entity updated sucessfully"
-                "404":
-                    description: "Entity doesn't exists"
+    #     delete:
+    #         operationId: "app.api.entity.delete_one_entity"
+    #         tags:
+    #             - "entities"
+    #         summary: "Delete an entity"
+    #         parameters:
+    #             - $ref: "#/components/parameters/eid"
+    #         responses:
+    #             "200":
+    #                 description: "Entity was deleted sucessfully"
+    #             "404":
+    #                 description: "Entity doesn't exists"
+    #     put:
+    #         operationId: "app.api.entity.update_one_entity"
+    #         tags:
+    #             - "entities"
+    #         summary: "Update an entity"
+    #         requestBody:
+    #             description: "Entity to be updated"
+    #             required: True
+    #             content:
+    #                 application/json:
+    #                     schema:
+    #                         x-body-name: "entity"
+    #                         $ref: "#/components/schemas/Entity"
+    #         responses:
+    #             "200":
+    #                 description: "Entity updated sucessfully"
+    #             "404":
+    #                 description: "Entity doesn't exists"
 
     /v1/scale/:
         get:
@@ -158,28 +157,28 @@ paths:
 
     /v1/input/:
         post:
-            operationId: "app.api.input.barcode"
+            operationId: "app.api.input.process_input"
             tags:
                 - "input"
-            summary: "Send a barcode"
+            summary: "send a new command to the backend"
             requestBody:
                 description: "Sends a command"
                 required: True
                 content:
                     application/json:
                         schema:
-                            x-body-name: "barcode"
-                            $ref: "#/components/schemas/Barcode"
+                            x-body-name: "data"
+                            $ref: "#/components/schemas/Command"
             responses:
                 "200":
                     description: "Command Successful"
                 "400":
                     description: "Unknown Command"
         get:
-            operationId: "app.api.input.get_input"
+            operationId: "app.api.input.get_entries"
             tags:
                 - "input"
-            summary: "Return list of know inputs "
+            summary: "Return list of entries"
             responses:
                 "200":
-                    description: "Current read value"
+                    description: "List of records"

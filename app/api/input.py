@@ -33,12 +33,6 @@ class Record:
 
 
 #----- functions
-
-def process_input(data) -> Response:
-    if ('command' in data) and (data['command'] in COMMANDS):
-        return COMMANDS[data['command']](data)
-
-
 def create_entry(data) -> Response:
     """Create a new entry in the RECORDS array"""
 
@@ -50,10 +44,11 @@ def create_entry(data) -> Response:
         now = datetime.now()
 
         # record the entry
-        RECORDS.append(Record(provider, product, weight, now))
+        record = Record(provider, product, weight, now)
+        RECORDS[id(record)] = record
 
         # create the response
-        return create_response(now, config.HTTP_OK)
+        return create_response({'id': id(record)}, config.HTTP_OK)
 
     except KeyError:
         abort(config.HTTP_BAD_REQUEST, "Missing fields.")
@@ -61,12 +56,13 @@ def create_entry(data) -> Response:
 
 def get_entries() -> Response:
     results = []
-    for r in RECORDS:
+    for k, v in RECORDS.items():
         results.append({
-            'provider': r.provider,
-            'product': r.product,
-            'weight': r.weight,
-            'timestamp': r.timestamp
+            'id': k,
+            'provider': v.provider,
+            'product': v.product,
+            'weight': v.weight,
+            'timestamp': v.timestamp
         })
 
     return create_response({
@@ -76,10 +72,5 @@ def get_entries() -> Response:
 
 #----- begin
 
-# define the list of available commands
-COMMANDS: Dict[str, Callable] = {
-    'CREATE': create_entry,
-}
-
 # the list of entities for this session
-RECORDS: List[Record] = []
+RECORDS: Dict[int, Record] = {}

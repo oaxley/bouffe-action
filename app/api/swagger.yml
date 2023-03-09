@@ -157,7 +157,7 @@ paths:
 
     /v1/input/:
         post:
-            operationId: "app.api.input.process_input"
+            operationId: "app.api.input.create_entry"
             tags:
                 - "input"
             summary: "send a new command to the backend"

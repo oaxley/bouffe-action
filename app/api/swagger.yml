@@ -161,6 +161,15 @@ paths:
             responses:
                 "200":
                     description: "Current read value"
+    /v1/realscale/:
+        get:
+            operationId: "app.api.realscale.get_scale"
+            tags:
+                - "scale"
+            summary: "Returns the current value read by scale "
+            responses:
+                "200":
+                    description: "Current read value"
 
     /v1/input:
         post:
